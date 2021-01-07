@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	// "io/ioutil"
 	"log"
-	// "fmt"
+	"fmt"
 )
 
 type Article struct {
@@ -21,16 +21,21 @@ var articles = Articles {
 	Article{Title: "judul 3",Content: "Content 3"},
 }
 
-func main()  {
+func main() {
 	http.HandleFunc("/", getHome)
+	http.HandleFunc("/about", withLogging(getAbout, "get"))
 	http.HandleFunc("/articles", withLogging(getArticles, "get"))
 	http.HandleFunc("/post-article", withLogging(postArticle, "post"))
-	http.ListenAndServe(":3000", nil)
-    //log.Fatal(err)
+	log.Println("application started at port :8000")
+  log.Fatal(http.ListenAndServe(":8888", nil))
 }
 
 func getHome(w http.ResponseWriter, r *http.Request)  {
 	w.Write([]byte("Hello World, you're in home!"))
+}
+
+func getAbout(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hi, this is about Docker!")
 }
 
 func getArticles(w http.ResponseWriter, r *http.Request)  {
